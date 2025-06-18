@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Interactive Astronomy Pictionary - A fun educational board game combining astronomy knowledge with classic Pictionary gameplay">
+    <meta name="keywords" content="astronomy, pictionary, educational game, space, board game, interactive">
+    <meta name="author" content="AstroNova Interactive">
+    <meta property="og:title" content="Interactive Astronomy Pictionary">
+    <meta property="og:description" content="A fun educational board game that combines astronomy knowledge with classic drawing gameplay">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourusername.github.io/astronomy-pictionary">
+    
+    <title>Interactive Astronomy Pictionary | Educational Space Game</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>
+                <i class="fas fa-rocket" aria-hidden="true"></i> 
+                Interactive Astronomy Pictionary 
+                <i class="fas fa-star" aria-hidden="true"></i>
+            </h1>
+        </header>
+        
+        <!-- Game Controls -->
+        <section class="game-controls no-print" aria-label="Game Controls">
+            <div class="main-controls">
+                <div class="team-controls">
+                    <input 
+                        type="text" 
+                        id="teamName" 
+                        class="team-input" 
+                        placeholder="Enter team name" 
+                        maxlength="20"
+                        aria-label="Team name input"
+                    >
+                    <button class="add-team" onclick="addTeam()" aria-label="Add new team">
+                        <i class="fas fa-plus" aria-hidden="true"></i> Add Team
+                    </button>
+                    <button class="timer-button" onclick="resetGame()" aria-label="Start new game">
+                        <i class="fas fa-refresh" aria-hidden="true"></i> New Game
+                    </button>
+                </div>
+                
+                <div class="timer-container">
+                    <div class="timer" id="timer" role="timer" aria-live="polite">1:00</div>
+                    <button class="timer-button" id="timerBtn" onclick="toggleTimer()" aria-label="Start or stop timer">
+                        <i class="fas fa-play" aria-hidden="true"></i> Start
+                    </button>
+                    <button class="draw-card-button" onclick="drawCard()" aria-label="Draw new card">
+                        <i class="fas fa-cards-blank" aria-hidden="true"></i> Draw Card
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Current Card Display -->
+        <section class="current-card" id="currentCard" aria-label="Current Card" style="display: none;">
+            <div class="current-card-category" id="currentCategory" aria-label="Card category"></div>
+            <div class="current-card-word" id="currentWord" aria-label="Word to draw"></div>
+            <div class="card-actions">
+                <button class="success-btn" onclick="cardSuccess()" aria-label="Mark as successful guess">
+                    <i class="fas fa-check" aria-hidden="true"></i> Success
+                </button>
+                <button class="skip-btn" onclick="skipCard()" aria-label="Skip this card">
+                    <i class="fas fa-forward" aria-hidden="true"></i> Skip
+                </button>
+            </div>
+        </section>
+
+        <!-- Teams Display -->
+        <section class="team-display" id="teamDisplay" aria-label="Teams and Scores"></section>
+
+        <!-- Dice Roll -->
+        <section class="dice-roll" id="diceRoll" aria-label="Dice Roll">
+            <button class="dice" id="dice" onclick="rollDice()" aria-label="Roll dice">🎲</button>
+            <div id="diceResult" aria-live="polite"></div>
+        </section>
+
+        <!-- Game Board -->
+        <main class="game-board" role="main" aria-label="Game Board">
+            <div class="stars" aria-hidden="true"></div>
+            
+            <!-- Start Position -->
+            <div class="path start" aria-label="Start position">START</div>
+            
+            <!-- Path positions (1-49) -->
+            <div class="path pos1 normal" data-position="1" aria-label="Position 1">1</div>
+            <div class="path pos2 normal" data-position="2" aria-label="Position 2">2</div>
+            <div class="path pos3 special" data-position="3" aria-label="Position 3, Special space">3</div>
+            <div class="path pos4 normal" data-position="4" aria-label="Position 4">4</div>
+            <div class="path pos5 normal" data-position="5" aria-label="Position 5">5</div>
+            <div class="path pos6 special" data-position="6" aria-label="Position 6, Special space">6</div>
+            <div class="path pos7 normal" data-position="7" aria-label="Position 7">7</div>
+            <div class="path pos8 normal" data-position="8" aria-label="Position 8">8</div>
+            <div class="path pos9 normal" data-position="9" aria-label="Position 9">9</div>
+            <div class="path pos10 special" data-position="10" aria-label="Position 10, Special space">10</div>
+            
+            <div class="path pos11 normal" data-position="11" aria-label="Position 11">11</div>
+            <div class="path pos12 normal" data-position="12" aria-label="Position 12">12</div>
+            <div class="path pos13 special" data-position="13" aria-label="Position 13, Special space">13</div>
+            <div class="path pos14 normal" data-position="14" aria-label="Position 14">14</div>
+            <div class="path pos15 normal" data-position="15" aria-label="Position 15">15</div>
+            
+            <div class="path pos16 normal" data-position="16" aria-label="Position 16">16</div>
+            <div class="path pos17 special" data-position="17" aria-label="Position 17, Special space">17</div>
+            <div class="path pos18 normal" data-position="18" aria-label="Position 18">18</div>
+            <div class="path pos19 normal" data-position="19" aria-label="Position 19">19</div>
+            <div class="path pos20 special" data-position="20" aria-label="Position 20, Special space">20</div>
+            
+            <div class="path pos21 normal" data-position="21" aria-label="Position 21">21</div>
+            <div class="path pos22 normal" data-position="22" aria-label="Position 22">22</div>
+            <div class="path pos23 special" data-position="23" aria-label="Position 23, Special space">23</div>
+            <div class="path pos24 normal" data-position="24" aria-label="Position 24">24</div>
+            <div class="path pos25 normal" data-position="25" aria-label="Position 25">25</div>
+            
+            <div class="path pos26 normal" data-position="26" aria-label="Position 26">26</div>
+            <div class="path pos27 special" data-position="27" aria-label="Position 27, Special space">27</div>
+            <div class="path pos28 normal" data-position="28" aria-label="Position 28">28</div>
+            <div class="path pos29 normal" data-position="29" aria-label="Position 29">29</div>
+            <div class="path pos30 normal" data-position="30" aria-label="Position 30">30</div>
+            
+            <div class="path pos31 special" data-position="31" aria-label="Position 31, Special space">31</div>
+            <div class="path pos32 normal" data-position="32" aria-label="Position 32">32</div>
+            <div class="path pos33 normal" data-position="33" aria-label="Position 33">33</div>
+            <div class="path pos34 special" data-position="34" aria-label="Position 34, Special space">34</div>
+            <div class="path pos35 normal" data-position="35" aria-label="Position 35">35</div>
+            <div class="path pos36 normal" data-position="36" aria-label="Position 36">36</div>
+            <div class="path pos37 normal" data-position="37" aria-label="Position 37">37</div>
+            <div class="path pos38 special" data-position="38" aria-label="Position 38, Special space">38</div>
+            <div class="path pos39 normal" data-position="39" aria-label="Position 39">39</div>
+            <div class="path pos40 normal" data-position="40" aria-label="Position 40">40</div>
+            
+            <div class="path pos41 normal" data-position="41" aria-label="Position 41">41</div>
+            <div class="path pos42 special" data-position="42" aria-label="Position 42, Special space">42</div>
+            <div class="path pos43 normal" data-position="43" aria-label="Position 43">43</div>
+            <div class="path pos44 normal" data-position="44" aria-label="Position 44">44</div>
+            <div class="path pos45 special" data-position="45" aria-label="Position 45, Special space">45</div>
+            <div class="path pos46 normal" data-position="46" aria-label="Position 46">46</div>
+            <div class="path pos47 normal" data-position="47" aria-label="Position 47">47</div>
+            <div class="path pos48 normal" data-position="48" aria-label="Position 48">48</div>
+            <div class="path pos49 special" data-position="49" aria-label="Position 49, Special space">49</div>
+            
+            <!-- Finish Position -->
+            <div class="path finish" aria-label="Finish position">FINISH</div>
+            
+            <!-- Team markers will be added dynamically -->
+        </main>
+
+        <!-- Legend -->
+        <section class="legend" aria-label="Game Legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background: #4caf50;" aria-hidden="true"></div>
+                <span>Start Position</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #ff9800;" aria-hidden="true"></div>
+                <span>Finish Position</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #e91e63;" aria-hidden="true"></div>
+                <span>Special Spaces (Draw Card)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: rgba(255, 235, 59, 0.3);" aria-hidden="true"></div>
+                <span>Normal Spaces</span>
+            </div>
+        </section>
+
+        <!-- Game Rules -->
+        <section class="rules">
+            <h3><i class="fas fa-book" aria-hidden="true"></i> Game Rules</h3>
+            <ol>
+                <li><strong>Setup:</strong> Add 2-6 teams using the "Add Team" button. Each team starts at the START position.</li>
+                <li><strong>Turn Order:</strong> Teams take turns in the order they were added. The active team is highlighted in green.</li>
+                <li><strong>Drawing Phase:</strong> Click "Draw Card" to reveal an astronomy term. The active team has 60 seconds to draw and guess.</li>
+                <li><strong>Timer:</strong> Use the timer to track drawing time. Click Success if guessed correctly, Skip if not.</li>
+                <li><strong>Movement:</strong> After each turn, roll the dice to move forward on the board.</li>
+                <li><strong>Special Spaces:</strong> Landing on pink spaces (3, 6, 10, etc.) requires drawing an extra card.</li>
+                <li><strong>Scoring:</strong> Teams earn points for successful guesses and advance on the board.</li>
+                <li><strong>Winning:</strong> First team to reach the FINISH position wins!</li>
+            </ol>
+            
+            <h3><i class="fas fa-palette" aria-hidden="true"></i> Drawing Categories</h3>
+            <ul>
+                <li><span class="category-color blue" aria-hidden="true"></span> <strong>Planets & Solar System:</strong> Mercury, Venus, Earth, Mars, Jupiter, etc.</li>
+                <li><span class="category-color red" aria-hidden="true"></span> <strong>Stars & Constellations:</strong> Big Dipper, Orion, Polaris, Supernova, etc.</li>
+                <li><span class="category-color green" aria-hidden="true"></span> <strong>Space Objects:</strong> Galaxy, Nebula, Black Hole, Comet, Asteroid, etc.</li>
+                <li><span class="category-color yellow" aria-hidden="true"></span> <strong>Space Exploration:</strong> Rocket, Satellite, Space Station, Astronaut, etc.</li>
+                <li><span class="category-color purple" aria-hidden="true"></span> <strong>Phenomena:</strong> Eclipse, Aurora, Meteor Shower, Solar Wind, etc.</li>
+            </ul>
+        </section>
+
+        <!-- Print Button -->
+        <button class="print-button no-print" onclick="window.print()" aria-label="Print game board">
+            <i class="fas fa-print" aria-hidden="true"></i> Print Game Board
+        </button>
+    </div>
+
+    <!-- Modal for game events -->
+    <div class="modal" id="gameModal" role="dialog" aria-labelledby="modalContent" aria-hidden="true">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal()" aria-label="Close modal">&times;</button>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/script.js"></script>
+</body>
+</html>

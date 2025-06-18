@@ -1,2 +1,2 @@
 # Pictionary_Astronomy
-Pictionary game : Astronomy edition
+"A fun and educational board game that combines astronomy knowledge with classic Pictionary gameplay"
